@@ -1,0 +1,42 @@
+<div class="row">
+    <div class="col m2" style="margin-top:15%;">
+        <ul>
+            <li><a id="receive" class="btn" href=javascript:doDisplay1();"">받은 메세지</a></li>
+            <li><a id="send" class="btn" href=javascript:doDisplay2();"">보낸 메세지</a></li>
+            <li><a class="btn" href="/messenger/write">쪽지 보내기</a></li>
+        </ul>
+    </div>
+
+    <div class="col m9 offset-m1" id="receive_message">
+        <h1 style="text-align:center">보낸 메세지</h1>
+        <table class="table table-striped bordered responsive-table row">
+            <thead>
+                <tr>
+                    <th class="col m3">받은사람</th>
+                    <th class="col m7">제목</th>
+                    <th class="col m2" style="text-align:right">작성일자</th>
+                </tr>
+            </thead>
+            <tdody>
+                    <tr>
+                        <td class="col m3"><%= @view_messenger.sender_email %></a></td>
+                        <td class="col m7"><%= @view_messenger.title %></td>
+                        <td class="col m2" style="text-align:right"><%= @view_messenger.created_at.strftime("%Y/%m/%d") %></td>
+                    </tr>
+                    <tr>
+                    </tr>
+                    <tr>
+                        <td><%= @view_messenger.content %></td>
+                    </tr>
+            </tdody>
+        </table>
+        <a class="right" href="/messenger/destroy1/<%= @view_messenger.id %>">[삭제]</a>
+        <a class="right" href="/messenger/index">[목록]</a>
+        <%= form_tag "/messenger/write", method: "get" do %>
+            <%= hidden_field_tag :sender, "#{@view_messenger.sender_email}" %>
+            <%= button_tag "답장", class: "btn msg_write" %>
+        <% end %>
+    </div>
+
+    
+</div>

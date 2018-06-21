@@ -1,0 +1,38 @@
+// Place all the styles related to the index controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+.audio{
+    width: 100%;
+    
+}
+
+
+.container {
+    width: 1030px;
+    max-width: 100%;
+     //margin: 15px 0px 15px 0px;
+}
+
+.card .card-content {
+    padding: 0px;
+    margin: 15px 15px 15px 15px;
+    border-radius: 0 0 2px 2px;
+}
+
+.btn, .btn-large
+
+{   margin-top: 5px;
+    margin-bottom: 20px;
+    background-color: #2076b5;
+}
+
+.btn:hover, .btn-large:hover {
+  background-color: #39afff;
+}
+
+.dropdown-content li > a, .dropdown-content li > span {
+  
+    color: #2076E0;
+}

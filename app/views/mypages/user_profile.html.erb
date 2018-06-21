@@ -1,0 +1,137 @@
+<div class="row">
+    <div class="col s3">
+        <ul id="slide-out" class="side-nav fixed" style="margin-top:64px">
+            <li><div class="user-view">
+                <% if @u_profile.image.present? %>
+                    <div class="background">
+                        <img src="<%= @u_profile.image %>" style="width:100%">
+                    </div>
+                    <img class="circle" src="<%= @u_profile.image %>">
+                <% else %>
+                    <div class="background">
+                        <img src="<%= @u_profile.avatar.url %>" style="width:100%">
+                    </div>
+                    <img class="circle" src="<%= @u_profile.avatar.url %>">                
+                <% end %>
+                <span class="white-text name"><%= @u_profile.name %></span>
+                <span class="white-text email"><%= @u_profile.email %></span>
+            </div></li>
+            <li><a id="tmpost" href="javascript:doDisplay1();"><%= @u_profile.name %> 님이 쓴 글</a></li>
+            <li><a id="mspost" href="javascript:doDisplay2();"><%= @u_profile.name %> 님이 쓴 뮤직포스트</a></li>
+            <li><a id ="comment" href="javascript:doDisplay3();"><%= @u_profile.name %> 님이 쓴 댓글</a></li>
+        </ul>    
+    </div>     
+    
+    <div class="my_tmpost col s9" id="my_tmpost" style="display:none; margin-top:10%">
+        <!--내가 쓴 포스트 이미지-->
+        <div>
+            <img src="/assets/follow.png" style="margin-top: 15px;"> 
+        </div>
+        
+        <h5><%= @u_profile.name %> 님이 쓴 포스트</h5>
+        <% @u_profile.posts.each do |post| %>
+            <div class="col s12 m4">
+                <div class="card small">
+                    <div class="card-image">
+                        <% if post.image.url %>
+                             <img src="<%= post.image.url %>"> 
+                        <% end %>                    
+                    </div>
+                    <div class="card-content">
+                        <% if post.music.url %>
+                            <audio controls>
+                              <source src="<%= post.music.url %>" type="audio/ogg">
+                            </audio>                            
+                        <% end %>
+                    </div>
+                    <div class="card-action">
+                        <div class="chip">
+                            #<%= post.musictype%>
+                        </div>                              
+                        <p><a href="/posts/<%=post.id%>/"><%=post.title%></a></p>
+                    </div>                
+                </div>                
+            </div>
+        <% end %>
+    </div>
+    
+    <div class="my_mspost col s9" style="display:none; margin-top:10%" id="my_mspost">
+        <!--내가 쓴 뮤직포스트-->
+        <div>
+            <img src="/assets/follow.png" style="margin-top: 15px;"> 
+        </div>
+        
+        <h5><%= @u_profile.name %> 님이 쓴 뮤직포스트</h5>
+        <% @u_profile.musicposts.each do |musicpost| %>
+            <div class="col s12 m4">
+                <div class="card small">
+                    <div class="card-image">
+                        <% if musicpost.image.url %>
+                             <img src="<%= musicpost.image.url %>"> 
+                        <% end %>                    
+                    </div>
+                    <div class="card-content">
+                        <% if musicpost.music.url %>
+                            <audio controls>
+                                <source src="<%= musicpost.music.url %>" type="audio/ogg">
+                            </audio>                            
+                        <% end %>
+                    </div>
+                    <div class="card-action">
+                        <div class="chip">
+                            #<%= musicpost.musictype%>
+                        </div>                              
+                        <p><a href="/musicposts/<%= musicpost.id %>"><%= musicpost.title %></a></p>
+                    </div>                
+                </div>                
+            </div>
+        <% end %>
+    </div>
+    
+    <div class="my_comment col s9" style="display:none; margin-top:10%" id="my_comment">
+        <!--내가 쓴 댓글 이미지-->
+        <div>
+            <img src="/assets/follow.png" style="margin-top: 15px;"> 
+        </div>
+        <h5><%= @u_profile.name %> 님이 쓴 댓글</h5><br>
+        <div class="col s12 m4">
+            <% @u_profile.comments.each do |comment| %>
+                게시물 제목 : <%= comment.post.title %><br> 
+                내가 단 댓글 : <a href="/posts/<%= comment.post.id %>"><%= comment.content %></a><br>
+            <% end %>
+        </div>
+    </div>
+    
+
+</div>
+<script type="text/javascript">
+    $("#tmpost").click(function doDisplay1(){
+        var my_tm = document.getElementById("my_tmpost");
+        var my_mp = document.getElementById("my_mspost");
+        var my_co = document.getElementById("my_comment");
+        
+        my_tm.style.display = 'block';
+        my_mp.style.display = 'none';
+        my_co.style.display = 'none';
+    }) 
+    
+        $("#mspost").click(function doDisplay2(){
+        var my_tm = document.getElementById("my_tmpost");
+        var my_mp = document.getElementById("my_mspost");
+        var my_co = document.getElementById("my_comment");
+        
+        my_tm.style.display = 'none';
+        my_mp.style.display = 'block';
+        my_co.style.display = 'none';
+    })   
+    
+        $("#comment").click(function doDisplay3(){
+        var my_tm = document.getElementById("my_tmpost");
+        var my_mp = document.getElementById("my_mspost");
+        var my_co = document.getElementById("my_comment");
+        
+        my_tm.style.display = 'none';
+        my_mp.style.display = 'none';
+        my_co.style.display = 'block';
+    })   
+</script>

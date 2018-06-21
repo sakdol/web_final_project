@@ -1,0 +1,46 @@
+<% if @error %>
+    <h1><%= @error %></h1>
+<% else %>
+     <div class="row"> 
+     
+            <div class="col s12 m8"> 
+                <% @posts.each do |post| %> 
+                     <%= render partial: "post", object: post %>
+                <% end %> 
+            </div> 
+            
+            <div class="col s12 m4">
+                <div class="card"> 
+                  <div class="image" style="margin-top: 20px;" align="center"> 
+                      <% if current_user.image %>
+                            <img class="circle responsive-img" src="<%= current_user.image %>" /> <!-- 페북 유저 프로필 사진 !-->
+                      <% elsif current_user.avatar %>
+                          <img class="circle responsive-img" src="<%= current_user.avatar.url %>" /> <!-- 일반 유저 프로필 사진 !-->
+                      <% else %>
+                      
+                      <% end %>
+                  </div> 
+                  <div class="card-content"> 
+                      
+                      <div class="card-title" align="center"><%= current_user.name %></div> 
+                      <p>이메일 : <%= current_user.email %></p> 
+                      <p>올린 TeamMaking 글 개수 : <%= @posts_count %></p>
+                      <p>팔로워 : <%= current_user.followers.length %></p>
+                      <p>팔로잉 : <%= current_user.followings.length %></p>
+                      <%= link_to new_post_path do %> 
+                      <button class="btn">글 쓰기</button> 
+                      <% end %> 
+                  </div> 
+                </div> 
+                <%= form_tag "/posts", method: "GET" do %> 
+                    <div class="col m10"><%= text_field_tag :query, nil, class: "materialize-textarea", placeholder: "" %></div>
+                    <div class="col m2"><%= button_tag "search", class: "right medium material-icons" %></div>
+                <% end %>
+            </div> 
+
+        </div> 
+<% end %>
+<% if params[:query].nil? %>        
+    <%= will_paginate @posts %>
+<% end %>
+

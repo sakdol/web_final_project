@@ -1,0 +1,52 @@
+<div class="container">
+     <div class="row"> 
+         <div class="card col s12"> 
+             <div class="card-content"> 
+             <div class="card-title">TeamMaking 글 수정하기</div> 
+             <br>
+                 <%= form_tag post_path(@post), method: "patch" do %> 
+                      <input type="hidden" name="id" value="<%=@post.id%>">
+                     <div class="input-field">
+                           <label class="active" for="title">음악의 제목을 입력해주세요.(30자 이내)</label>
+                          <%= text_area_tag :title, @post.title, class: "materialize-textarea", placeholder: "",maxlength: "30" %> 
+                      </div>
+                      <br>
+                     <div class="input-field">
+                         <label class="active" for="type">음악의 유형을 입력해주세요.(11자 이내)</label>
+                          <%= text_area_tag :musictype, @post.musictype, class: "materialize-textarea", placeholder: "",maxlength: "11" %> 
+                      </div>               
+                      
+                      <label disabled class="active" for="image">음악 이미지 파일 수정은 불가 합니다.</label>
+                      
+                     <div class="input-field">
+                         <%= file_field_tag :image ,disabled: "true" %>
+                     </div>
+                      <br>
+                          <label class="active" for="music">음악 파일 수정은 불가 합니다.</label>
+                      
+                     <div class="input-field">
+                         <%= file_field_tag :music ,disabled: "true"%>
+                     </div>        
+                     <br>
+                     <div class="input-field">
+                         <label class="active" for="content">음악에 대한 설명 및 소개</label>
+                          <%= text_area_tag :content, @post.content, class: "materialize-textarea", placeholder: "" %> 
+                      </div>
+                      <br>
+                      
+                     <div class="input-field">
+                         <label class="active" for="content">팀원 자격 요건</label>
+                          <%= text_area_tag :requirement, @post.requirement, class: "materialize-textarea", placeholder: "" %> 
+                      </div>
+                      <br>
+                      <div class="input-field">
+                           <%= button_tag "수정하기", class: "btn" %> 
+                      </div>
+                  <% end %> 
+              </div> 
+              </div> 
+    </div> 
+          </div>
+
+
+            

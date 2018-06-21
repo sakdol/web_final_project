@@ -1,0 +1,192 @@
+<br>
+  <div class="carousel carousel-slider">
+    <a class="carousel-item" href="#one!"><img src="/assets/index_img5.png"></a>
+    <a class="carousel-item" href="/musicposts/new"><img src="/assets/index_img6.png"></a>
+    <a class="carousel-item" href="/posts/new"><img src="/assets/index_img7.png"></a>
+    <a class="carousel-item" href="#four!"><img src="/assets/index_img5.png"></a>
+  </div>
+
+<script>
+    $('.carousel.carousel-slider').carousel({fullWidth: true});
+    $(document).ready(function(){
+        $('.carousel').carousel({dist:0});
+        window.setInterval(function(){$('.carousel').carousel('next')},4500)
+     });
+</script>
+
+
+<section class="container"> 
+
+    <div class="row">
+        
+            <% @tm1.each do |post| %>
+            <div class="col s3">
+                <div class="card small">
+                    <div class="card-image">
+                        <% if post.image.url %>
+                             <img src="<%= post.image.url %>"> 
+                             
+                        <% end %>                    
+                    
+                </div>
+                <div class="card-content">
+                        <% if post.music.url %>
+                            <audio controls>
+                              <source src="<%= post.music.url %>" type="audio/ogg">
+                            </audio>                            
+                        <% end %>
+                </div>
+                
+                <div class="card-action">
+                        <div class="chip">
+                            #<%= post.musictype%>
+                        </div>
+                        
+                      <p><a href="/posts/<%=post.id%>/"><%=post.title%></a></p>
+                </div>                
+                </div>                
+            </div>
+            <% end %>
+            <% @tm2.each do |post| %>
+            <div class="col s3">
+                <div class="card small">
+                    <div class="card-image">
+                        <% if post.image.url %>
+                             <img src="<%= post.image.url %>"> 
+                             
+                        <% end %>                    
+                    
+                </div>
+                <div class="card-content">
+                        <% if post.music.url %>
+                            <audio controls>
+                              <source src="<%= post.music.url %>" type="audio/ogg">
+                            </audio>                            
+                        <% end %>
+                </div>
+                <div class="card-action">
+                        <div class="chip">
+                            #<%= post.musictype%>
+                        </div>                      
+                      <p><a href="/posts/<%=post.id%>/"><%=post.title%></a></p>
+                </div>                
+                </div>                
+            </div>
+            <% end %>
+            <% @tm3.each do |post| %>
+            <div class="col s3">
+                <div class="card small">
+                    <div class="card-image">
+                        <% if post.image.url %>
+                             <img src="<%= post.image.url %>"> 
+                             
+                        <% end %>                    
+                    
+                </div>
+                <div class=" card-content">
+                        <% if post.music.url %>
+                            <audio controls>
+                              <source src="<%= post.music.url %>" type="audio/ogg">
+                            </audio>                            
+                        <% end %>
+                </div>
+                <div class="card-action">
+                        <div class="chip">
+                            #<%= post.musictype%>
+                        </div>                    
+                      
+                      <p><a href="posts/<%=post.id%>"><%= post.title %></a></p>
+                </div>                
+                </div>                
+            </div>
+            <% end %>
+            <% @mp1.each do |post| %>
+            <div class="col s3">
+                <div class="card small">
+                    <div class="card-image">
+                        <% if post.image.url %>
+                             <img src="<%= post.image.url %>"> 
+                             
+                        <% end %>                    
+                    
+                </div>
+                <div class="card-content">
+                        <% if post.music.url %>
+                            <audio controls>
+                              <source src="<%= post.music.url %>" type="audio/ogg">
+                            </audio>                            
+                        <% end %>
+                </div>
+                <div class="card-action">
+                        <div class="chip">
+                            #<%= post.musictype%>
+                        </div>                    
+                      <p><a href="/musicposts/<%=post.id%>/"><%=post.title%></a></p>
+                </div>                
+                </div>                
+            </div>
+            <% end %>
+            <% @mp2.each do |post| %>
+            <div class="col s3">
+                <div class="card small">
+                    <div class="card-image">
+                        <% if post.image.url %>
+                             <img src="<%= post.image.url %>"> 
+                             
+                        <% end %>                    
+                    
+                </div>
+                <div class="card-action">
+
+                        <div class="chip">
+                            #<%= post.musictype%>
+                        </div>                    
+                      <p><a href="/musicposts/<%=post.id%>/"><%=post.title%></a></p>
+                </div>                   
+                <div class="card-content">
+                        <% if post.music.url %>
+                            <audio controls>
+                              <source src="<%= post.music.url %>" type="audio/ogg">
+                            </audio>                            
+                        <% end %>
+                </div>
+             
+                </div>                
+            </div>
+            <% end %>
+            <% @mp3.each do |post| %>
+            <div class="col s3">
+                <div class="card small">
+                    <div class="card-image">
+                        <% if post.image.url %>
+                             <img src="<%= post.image.url %>"> 
+                             
+                        <% end %>                    
+                    
+                </div>
+                <div class="card-action">
+                        <div class="chip">
+                            #<%= post.musictype%>
+                        </div>                    
+                      <p><a href="/musicposts/<%=post.id%>/"><%=post.title%></a></p>
+                </div>                   
+                <div class="card-content">
+                        <% if post.music.url %>
+                            <audio controls>
+                              <source src="<%= post.music.url %>" type="audio/ogg">
+                            </audio>                            
+                        <% end %>
+                </div>
+             
+                </div>                
+            </div>
+            <% end %>            
+            
+            
+
+            
+            
+            
+    </div>
+    
+</section>

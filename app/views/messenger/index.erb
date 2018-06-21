@@ -1,0 +1,88 @@
+<div class="row">
+    <div class="col m2">
+        <ul>
+            <li>
+                <a id="receive" class="btn" href=javascript:doDisplay1();"">받은 메세지</a>
+                <a id="send" class="btn" href=javascript:doDisplay2();"">보낸 메세지</a></li>
+            <li><a class="btn" href="/messenger/write">쪽지 보내기</a></li>
+        </ul>
+    </div>
+
+    <div class="col m9 offset-m1" id="receive_message">
+        <h1 style="text-align:center">받은 메세지</h1>
+        <table class="table table-striped responsive-table row">
+            <thead>
+                <tr>
+                    <th class="col m3">보낸사람</th>
+                    <th class="col m7">제목</th>
+                    <th class="col m2" style="text-align:right">작성일자</th>
+                </tr>
+            </thead>
+            <tdody>
+                <% @messenger.each do |p|%>
+                    <tr>
+                        <td class="col m3"><%= p.sender_email %></a></td>
+                        <td class="col m7"><a href="/messenger/view2/<%= p.id %>"><%= p.title %></a></td>
+                        <td class="col m2" style="text-align:right"><%= p.created_at.strftime("%Y/%m/%d") %></td>
+                    </tr>
+                <% end %>
+            </tdody>
+        </table>
+        
+    </div>
+    
+    <div class="col m9 offset-m1" style="display:none" id="send_message">
+        <h1 style="text-align:center">보낸 메세지</h1>
+    
+        <table class="table table-striped row">
+            <thead>
+                <tr>
+                    <th class="col m3">받은사람</th>
+                    <th class="col m7">제목</th>
+                    <th class="col m2" style="text-align:right">작성일자</th>
+                </tr>
+            </thead>
+            <tdody>
+                <% @messenger2.each_with_index do |p, index|%>
+                    <tr>
+                        <td class="col m3"><%= p.recever_email %></a></td>
+                        <td class="col m7"><a href="/messenger/view/<%= p.id %>"><%= p.title %></a></td>
+                        <td class="col m2" style="text-align:right"><%= p.created_at.strftime("%Y/%m/%d") %></td>
+                    </tr>
+                <% end %>
+            </tdody>
+        </table>
+        
+    </div>
+    <%= will_paginate @posts %>
+</div>
+
+
+<script type="text/javascript">
+    $("#receive").click(function doDisplay1(){
+        var re_ms = document.getElementById("receive_message");
+        var se_ms = document.getElementById("send_message");
+
+        re_ms.style.display = 'block';
+        se_ms.style.display = 'none';
+    }) 
+    
+        $("#send").click(function doDisplay2(){
+        var re_ms = document.getElementById("receive_message");
+        var se_ms = document.getElementById("send_message");
+
+        re_ms.style.display = 'none';
+        se_ms.style.display = 'block';
+    })   
+    
+    $('#pagination').materializePagination({
+        align: 'left',
+        lastPage:  10,
+        firstPage:  1,
+        urlParameter: 'page',
+        useUrlParameter: true,
+        onClickCallback: function(requestedPage){
+            console.log('Requested page is '+ requestedPage);
+    }
+}); 
+</script>

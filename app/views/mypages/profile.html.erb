@@ -1,0 +1,125 @@
+
+<a class="right" href="/mypages/<%= current_user.id %>/user_profile">a</a>
+<div class="row">
+    <div class="col s3">
+        <ul id="slide-out" class="side-nav fixed" style="margin-top:66px">
+            <li><div class="user-view">
+                <% if current_user.image.present? %>    
+                    <div class="background">
+                        <img src="<%= current_user.image %>" style="width:100%">
+                    </div>
+                    <img class="circle" src="<%= current_user.image %>">
+                <% else %>
+                    <div class="background">
+                        <img src="<%= current_user.avatar.url %>" style="width:100%">
+                    </div>
+                    <img class="circle" src="<%= current_user.avatar.url %>">                
+                <% end %>
+                <span class="white-text name"><%= current_user.name %></span>
+                <span class="white-text email"><%= current_user.email %></span>
+            </div></li>
+            <li><a id="tmpost" href="javascript:doDisplay1();">내가 쓴 글</a></li>
+            <li><a id="mspost" href="javascript:doDisplay2();">내가 쓴 뮤직포스트</a></li>
+            <li><a id ="comment" href="javascript:doDisplay3();">내가 쓴 댓글</a></li>
+        </ul>    
+    </div>     
+    
+    <div class="col s8" id="my_tmpost" style="display:none; margin-top:10%">
+
+        <h5>내가 쓴 포스트</h5>
+        <% current_user.posts.each do |post| %>
+            <div class="col s12 m4">
+                <div class="card small">
+                    <div class="card-image">
+                        <% if post.image.url %>
+                             <img src="<%= post.image.url %>"> 
+                        <% end %>                    
+                    </div>
+                    <div class="card-content">
+                        <% if post.music.url %>
+                            <audio controls>
+                              <source src="<%= post.music.url %>" type="audio/ogg">
+                            </audio>                            
+                        <% end %>
+                    </div>
+                    <div class="card-action">
+                        <p><%= post.title%></p>
+                        <a href="/posts/<%= post.id %>">This is a link</a>
+                    </div>                
+                </div>                
+            </div>
+        <% end %>
+    </div>
+    
+    <div class="my_mspost col s8" style="display:none; margin-top:10%" id="my_mspost">
+        <h5>내가 쓴 뮤직포스트</h1>
+        <% current_user.musicposts.each do |musicpost| %>
+            <div class="col s12 m4">
+                <div class="card small">
+                    <div class="card-image">
+                        <% if musicpost.image.url %>
+                             <img src="<%= musicpost.image.url %>"> 
+                        <% end %>                    
+                    </div>
+                    <div class="card-content">
+                        <% if musicpost.music.url %>
+                            <audio controls>
+                                <source src="<%= musicpost.music.url %>" type="audio/ogg">
+                            </audio>                            
+                        <% end %>
+                    </div>
+                    <div class="card-action">
+                        <p><%= musicpost.title%></p>
+                        <a href="/musicposts/<%= musicpost.id %>">This is a link</a>
+                    </div>                
+                </div>                
+            </div>
+        <% end %>
+    </div>
+    
+    <div class="my_comment col s8" style="display:none; margin-top:10%" id="my_comment">
+        <div class="col s12 m4">
+            
+               <!--여기 팔로우화면 이미지 넣기-->
+            
+            <h5>내가 쓴 댓글</h1><br>
+            <% current_user.comments.each do |comment| %>
+                게시물 제목 : <%= comment.post.title %><br> 
+                내가 단 댓글 : <a href="/posts/<%= comment.post.id %>"><%= comment.content %></a><br>
+            <% end %>
+        </div>
+    </div>
+    
+
+</div>
+<script type="text/javascript">
+    $("#tmpost").click(function doDisplay1(){
+        var my_tm = document.getElementById("my_tmpost");
+        var my_mp = document.getElementById("my_mspost");
+        var my_co = document.getElementById("my_comment");
+        
+        my_tm.style.display = 'block';
+        my_mp.style.display = 'none';
+        my_co.style.display = 'none';
+    }) 
+    
+        $("#mspost").click(function doDisplay2(){
+        var my_tm = document.getElementById("my_tmpost");
+        var my_mp = document.getElementById("my_mspost");
+        var my_co = document.getElementById("my_comment");
+        
+        my_tm.style.display = 'none';
+        my_mp.style.display = 'block';
+        my_co.style.display = 'none';
+    })   
+    
+        $("#comment").click(function doDisplay3(){
+        var my_tm = document.getElementById("my_tmpost");
+        var my_mp = document.getElementById("my_mspost");
+        var my_co = document.getElementById("my_comment");
+        
+        my_tm.style.display = 'none';
+        my_mp.style.display = 'none';
+        my_co.style.display = 'block';
+    })   
+</script>

@@ -1,0 +1,38 @@
+<div class="container">
+     <div class="row"> 
+         <div class="card col s12"> 
+             <div class="card-content"> 
+             <div class="card-title">Music 글쓰기</div> 
+                 <%= form_tag musicposts_path, multipart: true do %> 
+                     <div class="input-field">
+                        <label for="title">음악의 제목을 입력해주세요.(30자 이내)</label>
+                          <%= text_area_tag :title, nil, class: "materialize-textarea", placeholder: "" , required: "true", maxlength: "30"  %> 
+                      </div>
+                     <div class="input-field">
+                         <label for="type">음악의 유형을 입력해주세요.(11자 이내)</label>
+                          <%= text_area_tag :musictype, nil, class: "materialize-textarea", placeholder: "", required: "true", maxlength: "11" %> 
+                      </div>               
+                      
+                      <label for="image">음악에 어울리는 이미지를 올려주세요.</label>
+                      
+                     <div class="input-field">
+                         <%= file_field_tag :image ,placeholder: "음악에 어울리는 이미지를 올려주세요."%>
+                     </div>
+                      
+                          <label for="music">음악 파일 업로드!</label>
+                      
+                     <div class="input-field">
+                         <%= file_field_tag :music %>
+                     </div>                     
+                     <div class="input-field">
+                         <label for="content">음악에 대한 설명 및 소개</label>
+                          <%= text_area_tag :content, nil, class: "materialize-textarea", placeholder: "" %> 
+                      </div>                      
+                      <div class="input-field">
+                           <%= button_tag "작성하기", class: "btn" %> 
+                      </div>
+                  <% end %> 
+              </div> 
+              </div> 
+    </div> 
+          </div>

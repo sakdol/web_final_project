@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>NewWaves</title>
+    <%= csrf_meta_tags %>
+    <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload'  %>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- Latest compiled and minified CSS -->
+    
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>-->
+
+    
+  
+  </head>
+  
+  <body>
+    <ul id="dropdown1" class="dropdown-content">
+      <% if user_signed_in? %>
+        <li><a href="/mypages/<%= current_user.id %>/user_profile">Profile</a></li>
+      <% end %>
+      <li><a href="/mypages/following">Following</a></li>
+      <li><a href="/playlists/index">MyPlaylist</a></li>
+      <li class="divider"></li>
+      <li><a href="/messenger/index">쪽지함</a></li>
+      <% if user_signed_in? %>
+        <li><a href="/mypages/<%=current_user.id%>/myteam">MyTeam</li>
+      <% end %>
+    </ul>
+    
+    <ul id="dropdown2" class="dropdown-content">
+    
+      <% if user_signed_in? %>
+      <a href="/mypages/<%= current_user.id %>/user_profile">Profile</a>
+      <% end %>
+      <li><a href="/mypages/following">Following</a></li>
+      <li><a href="/playlists/index">MyPlaylist</a></li>
+      <li class="divider"></li>
+      <li><a href="/messenger/index">쪽지함</a></li>
+      <% if user_signed_in? %>
+        <li><a href="/mypages/<%=current_user.id%>/myteam">MyTeam</li>
+      <% end %>
+    </ul>
+    
+    
+    <div class="navbar-fixed">
+      <nav>
+        <div class="nav-wrapper blue lighten-2">
+          <div class="container">
+            <a href="/" class="brand-logo">New Waves</a>
+            <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+            <ul class="right hide-on-med-and-down">
+              <li><a href="/posts">TeamMaking Posts</a></li>
+              <li><a href="/musicposts">Music Posts</a></li>
+              <% if user_signed_in? %>
+              <li><a class="dropdown-button" href="#!" data-activates="dropdown1">Mypage
+                  <i class="material-icons right">arrow_drop_down</i></a></li>
+                <li><%= link_to 'Sign out', destroy_user_session_path, method: 'delete' %></li>
+  
+              <% else %>
+                <li><a href="/users/sign_in">Sign in</a></li>
+                <li><%= link_to 'FB 로그인', user_facebook_omniauth_authorize_path %></li>
+                <li><a href="/users/sign_up">Sign up</a></li>
+              <% end %>
+            </ul>
+            <ul class="side-nav" id="mobile-demo" >
+              <br>
+              <li><a href="/posts">Posts</a></li>
+              <li><a href="/musicposts">Music Posts</a></li>
+               <% if user_signed_in? %>
+               
+                <li><a class="dropdown-button" href="#!" data-activates="dropdown2">Mypage<i class="material-icons right">arrow_drop_down</i></a></li>  
+                 
+                <li><%= link_to 'Sign out', destroy_user_session_path, method: 'delete' %></li>
+              <% else %>
+                <li><a href="/users/sign_in">Sign in</a></li>
+                <li><a href="/users/sign_up">Sign up</a></li>
+              <% end %>
+            </ul>
+            
+          </div>
+          
+        </div>
+        
+      </nav>
+    </div>
+    <div class="container">
+      <%= yield %>
+      
+      
+    </div>
+    <script>
+
+        $(document).ready(function() { $(".dropdown-button").dropdown();});
+        $(document).ready(function() { $(".button-collapse").sideNav(); });
+
+    </script>
+
+  </body>
+</html>

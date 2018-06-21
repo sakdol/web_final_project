@@ -1,0 +1,30 @@
+<h1>My PlayList</h1>
+<hr>
+
+<div class="row">
+    <% current_user.playlists.each do |playlist| %>
+        <div class="col s3">
+            <div class="card small">
+                <div class="card-image">
+                    <% if playlist.musicpost.image.url %>
+                         <img src="<%= playlist.musicpost.image.url %>"> 
+                         
+                    <% end %>                    
+                    <span class="card-title"><%= playlist.musicpost.title %></span>
+                </div>
+                <div class="card-content">
+                    <% if playlist.musicpost.music.url %>
+                        <audio controls>
+                            <source src="<%= playlist.musicpost.music.url %>" type="audio/ogg">
+                        </audio>                            
+                    <% end %>
+                </div>
+                <div class="card-action">
+                    <p><%= playlist.musicpost.user.name %></p>
+                    <p><%= playlist.musicpost.title %></p>
+                    <a href="/posts/<%= playlist.musicpost.id %>">This is a link</a>
+                </div>
+            </div>
+        </div>
+    <% end %>
+</div>

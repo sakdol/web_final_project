@@ -1,0 +1,60 @@
+
+            
+            <ul class="collection">
+                
+                <% if @teamcomments.present? %>                    
+                    <% @teamcomments.each do |comment| %>    
+                        <li class="collection-item avatar">
+                                <% if comment.user.avatar.present? %>
+                                    <img class="circle thumbnail" src="<%= comment.user.avatar.thumb.url %>">
+                                <% elsif comment.user.image.present? %>
+                                    <img class="circle thumbnail" src="<%= comment.user.image %>"/>
+                                <% end %>                                                                                       
+                                <span class="title"><%= comment.user.name %></span>
+                                <span class="right">
+                                    <% if @now-comment.created_at.in_time_zone("Seoul")  < 60 %> <!-- 1분 이전일 때는 몇 초 전 이런식으로 표시 -->
+                                        <%= (@now-comment.created_at.in_time_zone("Seoul")).to_i %> 초전
+                                    <% elsif @now-comment.created_at.in_time_zone("Seoul") < 3600 %>  <!-- 1시간 이전일 떄는 몇 분전 이런식으로 표시 -->
+                                        <%= ((@now-comment.created_at.in_time_zone("Seoul"))/60).to_i %> 분전
+                                    <% elsif @now-comment.created_at.in_time_zone("Seoul") < 86400 %> <!-- 1일 이전일 때는 몇 시간 전 이런식으로 표시 -->
+                                        <%= ((@now-comment.created_at.in_time_zone("Seoul"))/3600).to_i %> 시간전
+                                    <% else %>  <!-- 1일 이상 넘어가면 그냥 몇일 전 이런식으로 표시 -->
+                                        <%= ((@now-comment.created_at.in_time_zone("Seoul"))/86400).to_i %> 일전
+                                    <% end %>                                        
+                                </span>
+                                <p class="pre-line"><%= comment.content %>
+                                </p>
+                                <% if comment.user.id == current_user.id %>
+                                    <div><%= link_to "삭제", team_teamcomment_path(params[:team_id],comment), method: "delete" %></div>
+                                <% end %>                                
+                        </li>
+                    <% end %>
+                <% else %>
+                    <li class="collection-item avatar">
+                        <p>등록된 팀 대화가 없습니다.</p>
+                        
+                    </li>
+                
+                <% end %>
+                
+                
+                <%= form_tag team_teamcomments_path(params[:team_id]), method: "post" do %> 
+                    <div class="write_comment">
+                        <div class="input-field">
+                            <input class="username" type="hidden" value="<%=current_user.name%>" >
+                            <input class="userid" type="hidden" value="<%=current_user.id%>">
+                            <%= text_area_tag :content, nil,class: "materialize-textarea content", placeholder: "댓글을 작성해주세요. ", placeholder: "댓글을 작성해주세요. ", required: true %>
+                        </div>
+                        <div class="input-field">
+                            <%= button_tag  "history 등록", class: "btn reply_submit right" %>
+                        </div>
+                        
+                        
+                    </div>                                            
+                <% end %>                
+
+            </ul>
+            
+            <br>
+            <br>
+            

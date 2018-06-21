@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+ <body>
+    <div>
+        <img src="/assets/follow.png" style="margin-top: 15px;"> 
+    </div>
+    
+    
+        <ul class="collection">
+            
+        <% current_user.followings.each do |followings| %>
+            <li class="collection-item avatar">
+
+            <% if followings.avatar.present? %>
+                <img class="circle thumbnail" src="<%= followings.avatar.thumb.url %>">
+            <% elsif followings.image.present? %>
+                <img class="circle thumbnail" src="<%= followings.image %>"/>
+            <% end %>             
+              <span class="title"><a class='button_<%= followings.id %>' href='/mypages/<%= followings.id %>/user_profile'> <%= followings.name %> </a></span>
+                                <%= form_tag follow_path(followings.id), method: :delete, class: "right" do %>
+                                    <button class="btn"><i class="medium material-icons left">cancel</i>팔로우 취소</button>
+                                <% end %>        
+                  <p class="content"> 당신을 포함하여 <%= followings.followers.length %> 명의 아티스트가 팔로우 하고있습니다. 
+    
+                </p>
+                   
+            </li>
+        <% end %>
+      </ul>
+        
+     </body>   
+</html>

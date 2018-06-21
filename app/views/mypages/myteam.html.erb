@@ -1,0 +1,272 @@
+
+<div class="row">
+    <div class="col s3">
+        <ul id="slide-out" class="side-nav fixed" style="margin-top:64px">
+            <li><div class="user-view">
+                <% if current_user.image.present? %>    
+                    <div class="background">
+                        <img src="<%= current_user.image %>" style="width:100%">
+                    </div>
+                    <img class="circle" src="<%= current_user.image %>">
+                <% else %>
+                    <div class="background">
+                        <img src="<%= current_user.avatar.url %>" style="width:100%">
+                    </div>
+                    <img class="circle" src="<%= current_user.avatar.url %>">                
+                <% end %>
+                
+                <span class="white-text name"><%= current_user.name %></span>
+                <span class="white-text email"><%= current_user.email %></span>
+            </div></li>
+            <li><a id="tmpost" href="javascript:doDisplay1();">Artist <%=current_user.name %>께서 팀원 신청한 내역 </a></li>
+            <li><a id="mspost" href="javascript:doDisplay2();">다른 Artist들이 팀원 신청한 내역</a></li>
+            <li><a id ="comment" href="javascript:doDisplay3();" class='dropdown-button' href='#' data-activates='dropdown3'>나의 팀 정보</a></li>
+        </ul>    
+    </div>     
+      <ul id='dropdown3' class='dropdown-content'>
+            <li><a id="i_leader" href="javascript:doDisplay4();">리더인 팀</a></li>
+            <li class="divider"></li>
+            <li><a id="not_leader" href="javascript:doDisplay5();">팀원인 팀</a></li>
+            
+            <!--<li><a id ="comment2" href="javascript:doDisplay6();">나의 전체 팀</a></li>-->
+    
+      </ul>
+    
+    <div class="col s8" id="my_application" style="display:none; margin-top:10%">
+        <span class="subtitle">Artist <%=current_user.name %>께서 팀원 신청한 내역</span><br>
+        <% @my_applications.each do |app| %>
+                    
+            
+            
+            <div class="col s12 m4">
+                <div class="card small">
+                    <div class="card-image">
+                             <img src="<%= Post.find(app.team.post_id).image.url %>"> 
+                    </div>
+                    <div class="card-content">
+                        <% if Post.find(app.team.post_id).music.url %>
+                            <audio controls>
+                              <source src="<%= Post.find(app.team.post_id).music.url %>" type="audio/ogg">
+                            </audio>                            
+                        <% end %>
+                    </div>
+                    <div class="card-action">
+                        <p><%= Post.find(app.team.post_id).title%></p>
+                        <p><h5>승인 여부:</h5></p>
+                        <p>
+                        <% if app.waiting %>
+                        <a class="waves-effect waves-light btn">
+                        <i class="medium material-icons left">alarm</i>
+                            대기중
+                        </a>
+                        <% else %>
+                            <% if app.granted %>
+                                <a class="waves-effect waves-light btn">
+                                <i class="medium material-icons left">check</i>
+                                    승인됨
+                                </a>                            
+                            <% else %>
+                                <a class="waves-effect waves-light btn">
+                                <i class="medium material-icons left">block</i>
+                                    거절됨
+                                </a>
+                            <% end %>
+                        
+                        <% end %>
+                        
+                        </p>
+                        <a href="/posts/<%= Post.find(app.team.post_id).id %>"><%= Post.find(app.team.post_id).title %></a>
+                        
+                    </div>                
+                </div>                
+            </div>
+            
+        <% end %>
+    </div>
+    
+    <div class="my_mspost col s8" style="display:none; margin-top:10%" id="my_mspost">
+        <span class="subtitle">다른 Artists가 팀원 신청한 내역</span><br>
+        <% @my_team.each do |team| %>
+            <% team.teammembers.where(waiting: true,granted: false).each do |app| %>
+                <ul class="collection">
+                    <li class="collection-item avatar">
+                      <% if User.find(app.member_id).image %>
+                            <img src="<%= User.find(app.member_id).image %>" class="circle"> <!-- 페북 유저 프로필 사진 !-->
+                      <% elsif User.find(app.member_id).avatar %>
+                          <img src="<%= User.find(app.member_id).avatar.url %>" class="circle"> <!-- 일반 유저 프로필 사진 !-->
+                      <% else %>
+                          <img src="/assets/index_img6.png" class="circle">
+                      <% end %>                        
+                      
+                      <span class="title"><a href="/mypages/<%= User.find(app.member_id).id %>/user_profile"><%= User.find(app.member_id).name %></a></span>
+                      <p>Team <a href="/posts/<%= Post.find(team.post_id) %>"><%= Post.find(team.post_id).title %></a> 에 지원하셨습니다.
+                      </p>
+                    <%= link_to team_teammember_reject_path(team,app.member_id) , method: "post", class: "waves-effect waves-light btn right" do %>
+                        <%= content_tag :i, "block", :class => "medium material-icons left" %>거절
+                    <% end %>
+                    <%= link_to team_teammember_grant_path(team,app.member_id) , method: "post", class: "waves-effect waves-light btn right" do %>
+                        <%= content_tag :i, "block", :class => "medium material-icons left" %>승인
+                    <% end %>                    
+                    </li>
+                  </ul>
+                <% end %>
+        <% end %>
+    </div>
+    
+    <div class="my_team col s8" style="display:none; margin-top:10%" id="my_team">
+        <div id="my_team1">
+        <span class="subtitle">Artist <%= current_user.name %> 님이 리더인 팀 정보<br></span>
+        <% @my_team.each do |team|%>
+            <div class="col s12 m12" style="margin-bottom: 50px;">
+                <div class="card large">
+                    <div class="card-content">
+                        
+                        <ul class="collapsible" data-collapsible="accordion">
+                            <li>
+                              <div class="collapsible-header"><i class="material-icons">filter_drama</i>팀 이름</div>
+                              <div class="collapsible-body"><div class="collection with-header"><div class="collection-header"><p>team <a class="teamname"href="/posts/<%= Post.find(team.post_id).id %>"><%= Post.find(team.post_id).title %></a></p></div></div></div>
+                            </li>
+                            <li>
+                              <div class="collapsible-header"><i class="material-icons">place</i>팀원 정보</div>
+                              <div class="collapsible-body">
+                                    <ul class="collection with-header">
+                                    <li class="collection-header"><p class="teamleader">Leader : <a href="/mypages/<%= User.find(team.leader_id).id %>/user_profile"><%= User.find(team.leader_id).name %></a></p></li>
+                                    <% team.teammembers.where(waiting: false, granted: true).each do |member| %>
+                                        <li class="collection-item">
+                                            <div>
+                                                <a href="/mypages/<%= User.find(member.member_id).id %>/user_profile"><%= User.find(member.member_id).name %></a>
+                                                <%= form_tag "/messenger/write", class: "right", method: "get" do %>
+                                                    <%= hidden_field_tag :receive, "#{User.find(member.member_id).email}" %>
+                                                    <%= button_tag "local_post_office", class: "secondary-content small material-icons" %>
+                                                <% end %>
+                                            </div>
+                                        </li>
+                                    <% end %>
+                                  </ul>
+                              </div>
+                            </li>
+                            <li>
+                              <div class="collapsible-header"><i class="material-icons">whatshot</i>팀원 단톡방</div>
+                              <div class="collapsible-body"><ul class="collection with-header"><li class="collection-header"><span><a href="/teams/<%=team.id %>/teamcomments">들어가기</a></span></ul></li></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        <% end %>
+        </div>
+        
+        <div id="my_team2">
+        <span class="subtitle">Artist <%= current_user.name %> 님이 팀원으로 승인된 팀 정보</span><br>
+        <% @my_grantedapps.each do |app|%>
+            <div class="col s12 m12">
+                <div class="card large">
+                    <div class="card-content">
+                        
+                        <ul class="collapsible" data-collapsible="accordion">
+                            <li>
+                              <div class="collapsible-header"><i class="material-icons">filter_drama</i>팀 이름</div>
+                              <div class="collapsible-body"><div class="collection with-header"><div class="collection-header"><p>team <a class="teamname" href="/posts/<%=Post.find(app.team.post_id).id %>/user_profile"><%= Post.find(app.team.post_id).title %></a></p></div></div></div>
+                            </li>
+                            <li>
+                              <div class="collapsible-header"><i class="material-icons">place</i>팀원 정보</div>
+                               <div class="collapsible-body">
+                                    <ul class="collection with-header">
+                                    <li class="collection-header"><p class="teamleader">Leader : <a href="/mypages/<%= app.team.leader_id %>"><%= User.find(app.team.leader_id).name %></a></p></li>
+                                    
+                                    <% app.team.teammembers.where(waiting: false, granted: true).each do |member| %>
+                                        <li class="collection-item">
+                                            <div>
+                                                <a href="/mypages/<%= member.member_id %>/user_profile"><%= User.find(member.member_id).name %></a>
+                                                <%= form_tag "/messenger/write", class: "right", method: "get" do %>
+                                                    <%= hidden_field_tag :receive, "#{User.find(member.member_id).email}" %>
+                                                    <%= button_tag "local_post_office", class: "secondary-content small material-icons" %>
+                                                <% end %>
+                                            </div>
+                                        </li>
+                                    <% end %>
+                                  </ul>
+                              </div>
+                            </li>
+                            <li>
+                              <div class="collapsible-header"><i class="material-icons">whatshot</i>팀원 단톡방</div>
+                              <div class="collapsible-body"><span><a href="/teams/<%= app.team.id %>/teamcomments">들어가기</a></span></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        <% end %>
+        </div>
+    </div>
+    
+
+</div>
+<script type="text/javascript">
+    $("#tmpost").click(function doDisplay1(){
+        var my_tm = document.getElementById("my_application");
+        var my_mp = document.getElementById("my_mspost");
+        var my_co = document.getElementById("my_team");
+        
+        my_tm.style.display = 'block';
+        my_mp.style.display = 'none';
+        my_co.style.display = 'none';
+    }) 
+    
+        $("#mspost").click(function doDisplay2(){
+        var my_tm = document.getElementById("my_application");
+        var my_mp = document.getElementById("my_mspost");
+        var my_co = document.getElementById("my_team");
+        
+        my_tm.style.display = 'none';
+        my_mp.style.display = 'block';
+        my_co.style.display = 'none';
+    })   
+    
+        $("#comment").click(function doDisplay3(){
+        var my_tm = document.getElementById("my_application");
+        var my_mp = document.getElementById("my_mspost");
+        var my_co = document.getElementById("my_team");
+        
+        my_tm.style.display = 'none';
+        my_mp.style.display = 'none';
+        my_co.style.display = 'block';
+        // if(my_tm1.style.display=='none'){
+
+        //     my_tm1.style.display = 'block';
+
+        // }else{
+        //     my_tm2.style.display = 'block';
+        // }
+
+    })
+    
+            $("#i_leader").click(function doDisplay4(){
+        var my_tm1 = document.getElementById("my_team1");
+        var my_tm2 = document.getElementById("my_team2");
+        
+        my_tm1.style.display = 'block';
+        my_tm2.style.display = 'none';
+
+    })
+    
+        $("#not_leader").click(function doDisplay5(){
+        var my_tm1 = document.getElementById("my_team1");
+        var my_tm2 = document.getElementById("my_team2");
+        
+        my_tm1.style.display = 'none';
+        my_tm2.style.display = 'block';
+
+    })
+    
+    //         $("#comment2").click(function doDisplay6(){
+    //     var my_tm1 = document.getElementById("my_team1");
+    //     var my_tm2 = document.getElementById("my_team2");
+        
+    //     my_tm1.style.display = 'block';
+    //     my_tm2.style.display = 'block';
+    // })
+    //드롭다운 스크립트
+    $(document).ready(function() { $(".dropdown-button").dropdown();});
+</script>
+

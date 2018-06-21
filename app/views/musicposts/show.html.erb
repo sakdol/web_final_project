@@ -1,0 +1,262 @@
+
+<div class="card post"> 
+    
+    <div style="padding:3%" class="card-content" id="content_<%= @post.id %>">
+        <% if @post.user.avatar.present? %>
+            <img class="circle thumbnail" src="<%= @post.user.avatar.thumb.url %>">
+        <% elsif @post.user.image.present? %>
+            <img class="circle thumbnail" src="<%= @post.user.image %>"/>
+        <% end %>
+
+            
+            <span>
+                <!-- Dropdown Trigger -->
+                        
+                        <span><a class='dropdown-button' href='#' data-activates='dropdown_<%= @post.id %>'> <%= @post.user.name %> </a></span>
+                        
+                          <!-- Dropdown Structure -->
+                        <ul id='dropdown_<%= @post.id %>' class='dropdown-content'>
+                            <li><a href='/mypages/<%= @post.user.id %>/user_profile'>Profile</a></li>
+                        <% if user_signed_in? && current_user != @post.user %>
+                            <% if current_user.followings.include?(@post.user) %>
+                                
+                                    <li><%= link_to "팔로우 취소", follow_path(@post.user.id), method: "delete" %> </li>
+
+                                
+                            <% else %>
+                                    <li>
+                                    <%= link_to follows_path(followed_id: @post.user.id), method: "post" do %>
+                                        팔로우
+                                        
+                                    <% end %>
+                                    </li>
+              
+                            <% end %>
+                        <% end %>
+                            
+                            <li class="divider"></li>
+                            <li><a class="button" href="/messenger/write?utf8=✓&sender=<%= @post.user.email %>">쪽지보내기</a></li>
+                        </ul>
+            </span>
+            
+            <span class="right">
+                    <% if @now-@post.created_at.in_time_zone("Seoul")  < 60 %> <!-- 1분 이전일 때는 몇 초 전 이런식으로 표시 -->
+                        <%= (@now-@post.created_at.in_time_zone("Seoul")).to_i %> 초전
+                    <% elsif @now-@post.created_at.in_time_zone("Seoul") < 3600 %>  <!-- 1시간 이전일 떄는 몇 분전 이런식으로 표시 -->
+                        <%= ((@now-@post.created_at.in_time_zone("Seoul"))/60).to_i %> 분전
+                    <% elsif @now-@post.created_at.in_time_zone("Seoul") < 86400 %> <!-- 1일 이전일 때는 몇 시간 전 이런식으로 표시 -->
+                        <%= ((@now-@post.created_at.in_time_zone("Seoul"))/3600).to_i %> 시간전
+                    <% else %>  <!-- 1일 이상 넘어가면 그냥 몇일 전 이런식으로 표시 -->
+                        <%= ((@now-@post.created_at.in_time_zone("Seoul"))/86400).to_i %> 일전
+                    <% end %>                
+            </span> 
+                  
+                <span class="card-title"><h3><%= @post.title%></h3></span>
+                
+                <div class="chip">
+                    #<%= @post.musictype%>
+                </div>
+                
+                <div class="content">
+                    
+                </div>                    
+                    <div class="card-image">
+                        <% if @post.image.url %>
+                             <img src="<%= @post.image.url %>"> 
+                             
+                        <% end %>
+                    </div>
+                    <div class="card-image">
+                        <% if @post.music.url %>
+                            <audio controls>
+                              <source src="<%= @post.music.url %>" type="audio/ogg">
+                            </audio>                            
+                        <% end %>
+                     </div> 
+                    <div class="description">
+                        <h5>음악에 대한 설명 및 소개</h5>
+                        <p class="pre-line"><%= @post.content %></p>
+                    </div>
+
+
+    </div> 
+
+    <div class="card-action"> 
+            <span class="numlikes_<%=@post.id%>"><%= @post.mplikes.count %></span> 명이 좋아합니다.
+                
+                <% if current_user.is_mplike?(@post) %>
+            
+                <input type="image" src="/assets/like.png" class="like_cancel_<%=@post.id%>" value="<%=@post.id%>">
+                <input type="image" src="/assets/unlike.png" class="like_<%=@post.id%>" value="<%=@post.id%>" style="display:none">
+                <% else %>
+                <input type="image" src="/assets/like.png" class="like_cancel_<%=@post.id%>" value="<%=@post.id%>" style="display:none">
+                <input type="image" src="/assets/unlike.png" class="like_<%=@post.id%>" value="<%=@post.id%>">
+                <% end %>
+                
+                    <% if current_user.is_playlist?(@post) %>
+                        <%= link_to "playlist에서 삭제", musicpost_playlist_path(@post), method: "post" %>
+                    <% else %>
+                        <%= link_to "playlist에 담기", musicpost_playlist_path(@post), method: "post" %>
+                    <% end %>            
+            
+            <% if current_user.id ==@post.user_id %>
+            <%= link_to "삭제", musicpost_path(@post), method: :delete, class: "right" %>
+            <%= link_to "수정", edit_musicpost_path(@post) , class: "right" %> <!-- class="right"하면 우측 정렬"!-->
+            <% end %>
+
+            <div class="input-field">
+                <input class="username" type="hidden" value="<%=current_user.name%>" >
+                <input class="userid" type="hidden" value="<%=current_user.id%>">
+                <%= text_area_tag :content, nil, class: "materialize-textarea content_#{@post.id}", placeholder: "댓글을 작성해주세요. ", required: true %>
+            </div>
+            <div class="input-field">
+                <%= button_tag "댓글 쓰기", class: "btn reply_submit_#{@post.id}", value: @post.id %>
+                <button href="javascript:doDisplay();" class="right" value="<%=@post.id%>" id="reply_view<%=@post.id%>"> 댓글 보기</button><br/><br/>
+            </div>
+
+            <!-- if post.comments.present? %> <!-- 댓글이 있으면 출력하겠다. !-->
+            <ul class="collection" style="display:none" id="reply_<%=@post.id%>">
+                <div id="reply_content_<%= @post.id %>"> 
+                    <% @post.mpcomments.each do |comment| %>
+                        <li class="collection-item">
+                            <span class="title"><%= comment.user.name %></span>
+                            <span class="right">
+                                <% if @now-comment.created_at.in_time_zone("Seoul")  < 60 %> <!-- 1분 이전일 때는 몇 초 전 이런식으로 표시 -->
+                                    <%= (@now-comment.created_at.in_time_zone("Seoul")).to_i %> 초전
+                                <% elsif @now-comment.created_at.in_time_zone("Seoul") < 3600 %>  <!-- 1시간 이전일 떄는 몇 분전 이런식으로 표시 -->
+                                    <%= ((@now-comment.created_at.in_time_zone("Seoul"))/60).to_i %> 분전
+                                <% elsif @now-comment.created_at.in_time_zone("Seoul") < 86400 %> <!-- 1일 이전일 때는 몇 시간 전 이런식으로 표시 -->
+                                    <%= ((@now-comment.created_at.in_time_zone("Seoul"))/3600).to_i %> 시간전
+                                <% else %>  <!-- 1일 이상 넘어가면 그냥 몇일 전 이런식으로 표시 -->
+                                    <%= ((@now-comment.created_at.in_time_zone("Seoul"))/86400).to_i %> 일전
+                                <% end %>                                                            
+                            </span>
+                            <p class="pre-line"><%= comment.content %></p>
+                            <% if comment.user.id == current_user.id %>
+                                <div><%= link_to "삭제", musicpost_mpcomment_path(@post,comment), method: "delete" %></div>
+                            <% end %>
+                        </li> 
+                    <% end %>
+                </div>
+            </ul>
+             <!-- #end %> -->   
+    </div> 
+</div> 
+
+<script type="text/javascript">
+    $(function(){
+        $(".reply_submit_<%=@post.id%>").click(function(){
+            
+            var post_id = this.value;
+            var reply_content = $(".content_" + post_id).val();
+            var user_name = $(".username").val();
+            $.ajax({
+              method: "POST",
+              url: "/musicposts/" + post_id + "/mpcomments",
+              data: { name: user_name , content: reply_content, id_of_post: post_id }, 
+              success: function(){
+                  $("#reply_content_" + post_id ).append( "<li class='collection-item'>" + "<span class='title'>"+user_name+"</span>" + "<p>"+reply_content+"</p>" +  "</li>" ); 
+                 $("#content_" + post_id).val('');
+              },
+              error: function(){
+                  alert("실패");
+              }
+            })
+        });
+    });
+    
+    $(function(){
+        $(".like_cancel_<%=@post.id%>").click(function(){
+            var post_id = this.value;
+            var numoflikes = $(".numlikes_"+ post_id).text();
+            var user_id = $(".userid").val();
+            var likes = parseInt(numoflikes)-parseInt(1);
+            
+            //var likes = parseInt(numoflikes);
+            //likes--;
+            //likes =String(likes);
+            $.ajax({
+                method: "POST",
+                url: "/musicposts/" + post_id + "/like",
+                data: { id: user_id,id_of_post: post_id , likenum: likes },
+                success: function(){
+                
+                $(".numlikes_"+ post_id).text(likes);
+                    
+                    
+                    
+                },
+                error: function(request,status,error){
+                     alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                    
+                }
+                
+            })
+            
+        });    
+        
+        
+    });
+    
+    
+    $(function(){
+        $(".like_<%=@post.id%>").click(function(){
+            var post_id = this.value;
+            var numoflikes = $(".numlikes_"+ post_id).text();
+            var user_id = $(".userid").val();
+            var likes = parseInt(numoflikes)+parseInt(1);
+            //var likes = parseInt(numoflikes);
+            //likes--;
+            //likes =String(likes);
+            $.ajax({
+                method: "POST",
+                url: "/musicposts/" + post_id + "/like",
+                data: { id: user_id,id_of_post: post_id , likenum: likes },
+                success: function(){
+                
+                $(".numlikes_"+ post_id).text(likes);
+                $
+                    
+                    
+                },
+                error: function(request,status,error){
+                     alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                    
+                }
+                
+            })
+            
+        });    
+        
+        
+    });
+    
+    
+    jQuery('.like_cancel_<%=@post.id%>').click(function () {  
+        
+            jQuery('.like_cancel_<%=@post.id%>').hide();  
+        
+            jQuery('.like_<%=@post.id%>').show();  
+        
+    });      
+
+    jQuery('.like_<%=@post.id%>').click(function () {  
+        
+            jQuery('.like_<%=@post.id%>').hide();  
+        
+            jQuery('.like_cancel_<%=@post.id%>').show();  
+        
+    });          
+    
+    $("#reply_view<%=@post.id%>").click(function doDisplay(){
+        var post_id = this.value;
+        var con = document.getElementById("reply_" + post_id);
+        if(con.style.display=='none'){
+            con.style.display = 'block';
+        }else{
+            con.style.display = 'none';
+        }
+    })     
+
+
+</script>

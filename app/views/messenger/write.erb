@@ -1,0 +1,40 @@
+
+<% if flash[:notice] %>
+    <script>
+    Materialize.toast('존재하지 않는 유저입니다.', 4000)
+    </script>
+<% else %>
+<div class="container">
+    <div class="row"> 
+        <div class="card col s12"> 
+            <div class="card-content"> 
+                <div class="card-title">메세지 보내기
+                </div> 
+                
+                <%= form_tag "/messenger/create" do %> 
+                
+                    <%= label_tag :recever_email, "받는 사람" %>
+                    
+                    <% if @receive.nil? %>
+                        <%= email_field_tag :recever_email, @sender, class: "materialize-textarea", placeholder: "" %>
+                    <% else %>
+                        <%= email_field_tag :recever_email, @receive, class: "materialize-textarea", placeholder: "" %>
+                    <% end %>
+                    
+                    <%= label_tag :message_title, "제목" %>
+                    <%= text_field_tag :message_title, nil, class: "materialize-textarea", placeholder: "" %>
+                
+                    <%= label_tag :message_content, "내용" %>
+                    <%= text_area_tag :message_content, nil, class: "materialize-textarea", placeholder: "" %>
+                
+                    <%= hidden_field_tag :sender_email, "#{current_user.email}" %>
+               
+                    <%= button_tag "작성하기", class: "btn msg_write" %> 
+                
+                <% end %>
+            </div> 
+        </div> 
+    </div> 
+</div>
+<% end %>
+

@@ -1,0 +1,51 @@
+// Place all the styles related to the musicposts controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.pre-line{
+    
+    white-space: pre-line;
+}
+
+
+.post {
+    
+    .card-content {
+        .thumbnail{
+            vertical-align: middle;
+            
+        }
+        
+        .content{
+            
+            margin: 20px 0;
+        }
+    }
+    
+}
+
+.description{
+    margin-top: 70px;
+    margin-bottom: 70px;
+    
+    
+}
+
+.requirement{
+    margin-top: 70px;
+    margin-bottom: 70px;
+        
+    
+}
+
+.more{
+    margin-bottom: 50px;
+}
+
+audio{
+    width: 100%;
+    
+}
+
+.card.post{
+    padding-top: 3%;}
